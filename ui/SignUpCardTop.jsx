@@ -17,12 +17,28 @@ function SignUpCardTop() {
     setSliderValue(newValue);
   };
 
+  const handleTouchMove = (e) => {
+    const sliderRect = sliderRef.current.getBoundingClientRect();
+    const newLeft = Math.min(Math.max(e.touches[0].clientX - sliderRect.left, 0), sliderRect.width); // Using touches[0]
+    const newValue = Math.round((newLeft / sliderRect.width) * (billData.length - 1));
+    setSliderValue(newValue);
+  };
+
   const handleStartDrag = () => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
   };
 
   const handleMouseDown = (e) => {
+    e.preventDefault();
+    document.body.style.cursor = 'grabbing';
+    handleStartDrag();
+  };
+
+  const handleTouchStart = (e) => {
     e.preventDefault();
     document.body.style.cursor = 'grabbing';
     handleStartDrag();
@@ -32,6 +48,12 @@ function SignUpCardTop() {
     document.body.style.cursor = 'default';
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleTouchEnd = () => {
+    document.body.style.cursor = 'default';
+    window.removeEventListener('touchmove', handleTouchMove);
+    window.removeEventListener('touchend', handleTouchEnd);
   };
 
   const amount = billData[sliderValue].amount;
@@ -55,6 +77,7 @@ function SignUpCardTop() {
             left: `${(sliderValue / (billData.length - 1)) * 100}%`,
           }}
           onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
         />
       </div>
 
