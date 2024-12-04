@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { AppContext } from './AppProvider';
 
 function SignUpCardTop() {
@@ -19,7 +19,7 @@ function SignUpCardTop() {
 
   const handleTouchMove = (e) => {
     const sliderRect = sliderRef.current.getBoundingClientRect();
-    const newLeft = Math.min(Math.max(e.touches[0].clientX - sliderRect.left, 0), sliderRect.width); // Using touches[0]
+    const newLeft = Math.min(Math.max(e.touches[0].clientX - sliderRect.left, 0), sliderRect.width);
     const newValue = Math.round((newLeft / sliderRect.width) * (billData.length - 1));
     setSliderValue(newValue);
   };
@@ -56,6 +56,10 @@ function SignUpCardTop() {
     window.removeEventListener('touchend', handleTouchEnd);
   };
 
+  useEffect(() => {
+    setSliderValue((prevSliderValue) => prevSliderValue);
+  }, [discount]); 
+
   const amount = billData[sliderValue].amount;
   const finalPrice = discount ? (amount * 0.75).toFixed(2) : amount;
 
@@ -83,7 +87,7 @@ function SignUpCardTop() {
 
       <section>
         <h5>Monthly Billing</h5>
-        <span onClick={() => applyDiscount()} className={discount ? 'active' : ''}></span>
+        <span onClick={applyDiscount} className={discount ? 'active' : ''}></span>
         <h5>Yearly Billing</h5>
         <h6><p>-</p>25%<p>discount</p></h6>
       </section>

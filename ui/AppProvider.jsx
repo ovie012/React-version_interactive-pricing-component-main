@@ -14,14 +14,8 @@ export function AppProvider({ children }) {
     {percentage : '100%', pageViews : '1M', amount : '36.00'},
   ]
 
-  const applyDiscount = (item) => {
+  const applyDiscount = () => {
     setDiscount(!discount);
-
-    // if(discount) {
-    //   setDiscountedAmount(item * 0.25);
-    // } else {
-    //   setDiscountedAmount(item)
-    // }
   }
 
   return (
